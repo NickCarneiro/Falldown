@@ -2,6 +2,10 @@
 
 A simple engine for building creative JavaScript Demos
 
+#Live demonstration
+
+http://trillworks.com/creative/
+
 # Writing a new demo
 Inside your JavaScript file, do the following:
 
