@@ -56,6 +56,7 @@ $(function(){
 
 //this is the engine loop. It renders all entities in the queue.
 	de.render = function(){
+		//console.log(de.queue.length);
 		if(de.clear_canvas === true){
 			canvas.clearCanvas();
 		}
