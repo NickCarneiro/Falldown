@@ -15,12 +15,16 @@ $(function(){
 
 
 	$("#change_script").on("click", function(){
-		//reset application state
+		//reset application state for new demo
+		window.clearTimeout();
 		$("#dynamic_script").remove();
 		$("#canvas").clearCanvas();
-		queue = [];
-		art.logic = function(){};
+		de.clear_canvas = true;
+		de.queue = [];
+		de.logic = function(){};
 		$("body").append('<script id="dynamic_script" src="js/' + $("#script_select").val() + '"></script>');
+		de.render();
+
 	});
 
 
@@ -35,9 +39,11 @@ de = {
 	//render queue processed on every iteration of render loop
 	queue: [] ,
 	//clear the canvas on every iteration
-	clear: false ,
+	clear_canvas: false ,
 	//called on every iteration
-	logic: function(){}
+	logic: function(){} ,
+	width: $(window).width() ,
+	height: $(window).height()
 };
 
 
@@ -45,35 +51,34 @@ $(function(){
 	
 	//set canvas size
 	var canvas = $("#canvas");
-	$("#canvas").attr({width:$(window).width()});
-	$("#canvas").attr({height:$(window).height()});
+	$("#canvas").attr({width:de.width});
+	$("#canvas").attr({height:de.height});
 
 //this is the engine loop. It renders all entities in the queue.
-	function render(){
-		if(de.clear === true){
+	de.render = function(){
+		if(de.clear_canvas === true){
 			canvas.clearCanvas();
 		}
-		de.logic();
+		de.logic(canvas);
 		//call every function in the render queue
 		var new_queue = [];
 		//canvas.clearCanvas();
-		for(var i= 0; i < queue.length; i++){
-			queue[i].draw(canvas);
-
+		for(var i= 0; i < de.queue.length; i++){
 			//if objects have been marked for removal, don't copy them to the new queue.
-			if(queue[i].remove !== true){
-				new_queue.push(queue[i]);
+			//also don't draw them
+			if(de.queue[i].remove != true){
+				de.queue[i].draw(canvas);
+				new_queue.push(de.queue[i]);
 			}
 			
 		}
 
-		queue = new_queue;
+		de.queue = new_queue;
 
 
 		//render at 60 fps
-		setTimeout(render, 33);
+		setTimeout(de.render, 33);
 
 	}
 
-	render();
 });

@@ -1,72 +1,60 @@
-/*
+/*==================
 Waves for DemoEngine
-*/
+==================*/
 $(function(){
-	
+
 
 var x = 30;
 var y = 0;
-var red_dir = true
-var color = 
-	{
-		red: 0,
-		green: 100,
-		blue: 100,
-		
-	};
-	function drawArcs(){
-		var x = 8 * Math.sin(y / 10);
-		for(var i = 0; i < 20; i++){
-			var arc = function(){
-				x += 70;
-				var color_string = "rgb(" + color.red + "," + color.green + "," + color.blue + ")";
-				$("#canvas").drawArc({
-					fillStyle: color_string,
-					x: x, 
-					y: y,
-					radius: 10
-				});
-			}
-			if(y < $(window).height()){
-				queue.push(arc);
-			} else {
-				y = 0;
-			}
+
+
+de.logic = function(){};
+de.clear_canvas = false;
+
+for(var i = 0; i < 20; i++){
+
+	var wave = {
+		x: x + i*30 ,
+		y: 0 ,
+		color: {
+			red: 0,
+			green: i * 10,
+			blue: 100
+		} ,
+		oscillation: Math.random() * .03 ,
+		red_dir: true ,
+		remove: false ,
+		draw: function(canvas){
+			this.y += 1;
+			this.x = this.x + Math.sin(this.oscillation* this.y);
+				
+			this.color.red = Math.floor(255 * Math.sin(.03 * this.y));
 			
-		}
-		if(red_dir === true){
-			if(color.red < 255){
-				color.red++;
-				color.green++;
-				color.blue++;
-			} else {
-				red_dir = false;
+			
+			var color_string = "rgb(" + this.color.red + "," + this.color.green + "," + this.color.blue + ")";
+			if(this.y > de.height){
+				this.y = 0;
 			}
-		} else {
-			if(color.red > 0){
-				color.red--;
-				color.green--;
-				color.blue--;
-			} else {
-				red_dir = true;
-			}
+			canvas.drawArc({
+				fillStyle: color_string,
+				x: this.x, 
+				y: this.y,
+				radius: 10
+			});
 		}
-		y++;
-		setTimeout(drawArcs, 33);
-
 	}
 
-var queue = [];
-	function render(){
-		//call every function in the render queue
-		var func = queue.pop()
-		while(func != undefined){
-			func();
-			func = queue.pop();
-		}
-		setTimeout(render, 33);
-	}
+	de.queue.push(wave);
+	
 
-	drawArcs();
-	render();
+	
+	y++;
+	
+}
+
+
+
+
+	
+
 });

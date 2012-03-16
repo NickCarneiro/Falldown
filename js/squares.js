@@ -6,7 +6,6 @@ $(function(){
 	//initialize squares in render queue
 	var window_height = $(window).height();
 	var window_width = $(window).width();
-	var id = 0;
 	var square_count = 100;
 	var rotation = -20;
 	var direction = true;
@@ -23,22 +22,15 @@ $(function(){
 
 		};
 
+	//overwrite logic function to add squares when we fall below the threshold.
 	de.logic = function(){
 		if(de.queue.length < square_count){
 			de.queue.push(createSquare());
 		}
 	}
 
+	de.clear_canvas = true;
 
-	function populateSquares(){
-
-
-		for(var i = 0; i < square_count; i++){
-
-
-			de.queue.push(createSquare());
-		}
-	}
 	function createSquare(){
 		if(origin_x > window_width / 2 + 400){
 			origin_x_speed = origin_x_speed * -1;
@@ -86,8 +78,7 @@ $(function(){
 			x_pos: origin_x,
 			y_pos: origin_y,
 			color: color_string,
-			objectid: id++,
-			remove: false;
+			remove: false ,
 			toString: function() {
 				return this.objectId;
 			},
@@ -112,6 +103,12 @@ $(function(){
 			}
 		}
 		return square;
+	}
+
+	function populateSquares(){
+		for(var i = 0; i < square_count; i++){
+			de.queue.push(createSquare());
+		}
 	}
 
 	populateSquares();
