@@ -1,0 +1,14 @@
+{
+	"name": "Falldown",
+	"description": "Don't let your ball hit the top of the screen!",
+	"version": "1",
+	"app": {
+		"launch": {
+			"local_path": "index.html"
+		}
+	},
+	"icons": {
+		"16": "ball_16.png",
+		"128": "ball_128.png"
+	}
+}
