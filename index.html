@@ -1,13 +1,29 @@
 <!DOCTYPE html>
-<head>
-	<link rel="stylesheet" href="css/loader.css" />
-<title>Falldown</title>
-<body>
-	
-	<canvas id="canvas">
-	</canvas>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script src="js/jcanvas.min.js"></script>
-	<script src="js/engine.js"></script>
-	<script src="js/falldown.js"></script>
-</body>
+<html>
+	<head>
+		<link rel="stylesheet" href="css/loader.css" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">	
+		<title>Falldown</title>
+		<script type='text/javascript'>
+		Clay = {};
+		Clay.gameKey = 'falldown'
+		Clay.ready = function( fn ) {
+		    Clay.readyFunction = fn;
+		};
+		( function() {
+		    var clay = document.createElement("script");
+		    clay.src = "http://clay.io/api/api.js"; 
+		    var tag = document.getElementsByTagName("script")[0]; tag.parentNode.insertBefore(clay, tag);
+		} )();
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas">
+		</canvas>
+		<img id='clock' src='clock.png' style='display: none;' />
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="js/jcanvas.min.js"></script>
+		<script src="js/engine.js"></script>
+		<script src="js/falldown.js"></script>
+	</body>
+</html>

@@ -23,6 +23,17 @@ de = {
 	}
 };
 
+// shim layer with setTimeout fallback
+window.requestAnimFrame = (function(){
+return window.requestAnimationFrame || 
+	window.webkitRequestAnimationFrame || 
+	window.mozRequestAnimationFrame || 
+	window.oRequestAnimationFrame || 
+	window.msRequestAnimationFrame || 
+	function( callback ){
+		window.setTimeout(callback, 1000 / 60);
+	};
+})();
 
 $(function(){
 	//set canvas size
@@ -32,14 +43,61 @@ $(function(){
 
 	//listen for keypresses
 	$("body").on("keydown", function(e){
-		if(e.which == 37){
+		if(e.which == 37)
 			de.keys.left = true;
-		} else if(e.which == 39){
+		else if(e.which == 39)
 			de.keys.right = true;
-		} else if(e.which == 32){
+		if(e.which == 32 || e.which == 38) // up / space do the same thing
 			de.keys.space = true;
-		}
+		if(e.which == 83)
+			de.keys.s = true;
+		if(e.which == 76)
+			de.keys.l = true;
 	});
+	
+	$("body").on("keyup", function(e){
+		if(e.which == 37)
+			de.keys.left = false;
+		else if(e.which == 39)
+			de.keys.right = false;
+		if(e.which == 32 || e.which == 38)
+			de.keys.space = false;
+	});
+	
+	// Touch also acts as space ( to start game on mobile )
+	$("body").on("touchstart", function(e) {
+		de.keys.space = true;
+	} );
+	$("body").on("touchend", function(e) {
+		de.keys.space = false;
+	});
+	
+	// Accelerometer
+	onDeviceMotion = function(e) {
+		var x_accel;
+		if( window.orientation == 0 || window.orientation == 180 )
+			x_accel = e.accelerationIncludingGravity.x;
+		else
+			x_accel = e.accelerationIncludingGravity.y;
+		if( window.orientation == 90 || window.orientation == 180 )
+			x_accel *= -1;
+			
+		if( x_accel > 0.5 )
+		{
+			de.keys.right = true;
+			de.keys.left = false;
+		}
+		else if( x_accel < -0.5 )
+		{
+			de.keys.left = true;
+			de.keys.right = false;
+		}
+		else
+		{
+			de.keys.left = de.keys.right = false;
+		}
+	};
+	window.addEventListener("devicemotion",onDeviceMotion,false);
 
 	de.ignition = function(init, logic){
 		de.init = init;
@@ -67,18 +125,11 @@ $(function(){
 		}
 
 		de.queue = new_queue;
-
-		//clear keys
 		
-		$.each(de.keys, function(i, key){
-			de.keys[i] = false;
-		});
-		
-		//render at 60 fps
-		setTimeout(de.render, 33);
+		//crank out as high of fps as we can
+		requestAnimFrame( de.render );
 
 	}
-
 	de.init(canvas);
 
 });
